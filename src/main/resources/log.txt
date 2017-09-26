@@ -1,0 +1,46 @@
+Sep 21 15:04:46 master avahi-daemon[20225]: avahi-daemon 0.6.32-rc starting up.
+Sep 21 15:04:46 master dbus[765]: [system] Successfully activated service 'org.freedesktop.Avahi'
+Sep 21 15:04:46 master systemd[1]: Started Avahi mDNS/DNS-SD Stack.
+Sep 21 15:04:46 master avahi-daemon[20225]: Successfully called chroot().
+Sep 21 15:04:46 master avahi-daemon[20225]: Successfully dropped remaining capabilities.
+Sep 21 15:04:46 master avahi-daemon[20225]: No service file found in /etc/avahi/services.
+Sep 21 15:04:46 master avahi-daemon[20225]: Joining mDNS multicast group on interface enp0s8.IPv6 with address fe80::a00:27ff:fe92:266d.
+Sep 21 15:04:46 master avahi-daemon[20225]: New relevant interface enp0s8.IPv6 for mDNS.
+Sep 21 15:04:46 master avahi-daemon[20225]: Joining mDNS multicast group on interface enp0s8.IPv4 with address 192.168.56.31.
+Sep 21 15:04:46 master avahi-daemon[20225]: New relevant interface enp0s8.IPv4 for mDNS.
+Sep 21 15:04:46 master avahi-daemon[20225]: Joining mDNS multicast group on interface enp0s3.IPv6 with address fe80::64f1:d588:dd80:45d4.
+Sep 21 15:04:46 master avahi-daemon[20225]: New relevant interface enp0s3.IPv6 for mDNS.
+Sep 21 15:04:46 master avahi-daemon[20225]: Joining mDNS multicast group on interface enp0s3.IPv4 with address 10.0.2.7.
+Sep 21 15:04:46 master avahi-daemon[20225]: New relevant interface enp0s3.IPv4 for mDNS.
+Sep 21 15:04:46 master avahi-daemon[20225]: Network interface enumeration completed.
+Sep 21 15:04:46 master avahi-daemon[20225]: Registering new address record for fe80::a00:27ff:fe92:266d on enp0s8.*.
+Sep 21 15:04:46 master avahi-daemon[20225]: Registering new address record for 192.168.56.31 on enp0s8.IPv4.
+Sep 21 15:04:46 master avahi-daemon[20225]: Registering new address record for fe80::64f1:d588:dd80:45d4 on enp0s3.*.
+Sep 21 15:04:46 master avahi-daemon[20225]: Registering new address record for 10.0.2.7 on enp0s3.IPv4.
+Sep 21 15:04:46 master systemd[1]: Reloading OpenBSD Secure Shell server.
+Sep 21 15:04:46 master systemd[1]: Reloaded OpenBSD Secure Shell server.
+Sep 21 15:04:46 master systemd[1]: Reloading OpenBSD Secure Shell server.
+Sep 21 15:04:46 master systemd[1]: Reloaded OpenBSD Secure Shell server.
+Sep 21 15:04:47 master avahi-daemon[20225]: Server startup complete. Host name is master.local. Local service cookie is 1826982264.
+Sep 21 15:04:47 master gnome-session[2094]: (deja-dup-monitor:2825): GLib-CRITICAL **: Source ID 120 was not found when attempting to remove it
+Sep 21 15:04:50 master avahi-daemon[20225]: Leaving mDNS multicast group on interface enp0s3.IPv6 with address fe80::64f1:d588:dd80:45d4.
+Sep 21 15:04:50 master avahi-daemon[20225]: Joining mDNS multicast group on interface enp0s3.IPv6 with address fd17:625c:f037:2:e344:b392:9eda:cd0e.
+Sep 21 15:04:50 master avahi-daemon[20225]: Registering new address record for fd17:625c:f037:2:e344:b392:9eda:cd0e on enp0s3.*.
+Sep 21 15:04:50 master avahi-daemon[20225]: Withdrawing address record for fe80::64f1:d588:dd80:45d4 on enp0s3.
+Sep 21 15:14:01 master dhclient[20120]: DHCPREQUEST of 10.0.2.7 on enp0s3 to 10.0.2.3 port 67 (xid=0x391a5353)
+Sep 21 15:14:01 master dhclient[20120]: DHCPACK of 10.0.2.7 from 10.0.2.3
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8702]   address 10.0.2.7
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8702]   plen 24 (255.255.255.0)
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8702]   gateway 10.0.2.1
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8702]   server identifier 10.0.2.3
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8702]   lease time 1200
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8705]   nameserver '10.30.103.97'
+Sep 21 15:14:01 master dhclient[20120]: bound to 10.0.2.7 -- renewal in 515 seconds.
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8706]   nameserver '10.30.103.98'
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8726]   domain name 'hwk.net'
+Sep 21 15:14:01 master NetworkManager[780]: <info>  [1505974441.8726] dhcp4 (enp0s3): state changed bound -> bound
+Sep 21 15:14:01 master dbus[765]: [system] Activating via systemd: service name='org.freedesktop.nm_dispatcher' unit='dbus-org.freedesktop.nm-dispatcher.service'
+Sep 21 15:14:01 master systemd[1]: Starting Network Manager Script Dispatcher Service...
+Sep 21 15:14:01 master dbus[765]: [system] Successfully activated service 'org.freedesktop.nm_dispatcher'
+Sep 21 15:14:01 master systemd[1]: Started Network Manager Script Dispatcher Service.
+Sep 21 15:14:01 master nm-dispatcher: req:1 'dhcp4-change' [enp0s3]: new request (1 scripts)

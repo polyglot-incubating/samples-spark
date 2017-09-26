@@ -1,0 +1,5 @@
+[
+  {"name":"name 1","no":1,"points":[1,2,3],"dict": {"key": "value1"}},
+  {"name":"name 2","no":2,"points":[2,4,6],"dict": {"key": "value2"}},
+  {"name":"name 3","no":3,"points":[3,6,9],"dict": {"key": "value3", "extra_key": "extra_value3"}}
+]
