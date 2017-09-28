@@ -2,7 +2,7 @@ package org.chiwooplatform.samples.ex01;
 
 import org.apache.spark.api.java.JavaSparkContext;
 
-import org.chiwooplatform.samples.SparkContextHolder;
+import org.chiwooplatform.samples.support.SparkContextHolder;
 import org.junit.Test;
 
 public class Ex001SparkContext {

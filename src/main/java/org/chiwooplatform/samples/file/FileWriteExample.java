@@ -19,17 +19,21 @@ import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 
-import org.chiwooplatform.samples.SparkContextHolder;
-import org.chiwooplatform.samples.SparkUtils;
+import org.chiwooplatform.samples.support.RddFunction;
+import org.chiwooplatform.samples.support.SparkContextHolder;
+import org.chiwooplatform.samples.support.SparkUtils;
 import org.junit.Test;
 
 /**
  * Windows 환경에서 Spark Dataset(DataFrame) 정보를 파일로 write 하려면
  * 
- * - Case1: Hadoop 전체를 Windows에 설치 하거나, - Case2: Hadoop 의 HDFS 라이브러리만 따로 Windows에 설치 하면
- * 된다. 참고)
- * https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-tips-and-tricks-running-spark-windows.html
- * https://github.com/steveloughran/winutils
+ * <pre>
+ *   - Case1: Hadoop 전체를 Windows에 설치 하거나, 
+ *   - Case2: Hadoop 의 HDFS 라이브러리만 따로 Windows에 설치 하면 된다.
+ * 
+ *   참고) https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-tips-and-tricks-running-spark-windows.html
+ *        https://github.com/steveloughran/winutils
+ * </pre>
  */
 public class FileWriteExample {
 
@@ -53,16 +57,6 @@ public class FileWriteExample {
             final String[] col2 = COLON.split(row.getString(1));
             final String[] col3 = COLON.split(row.getString(2));
             final Row newRow = RowFactory.create(col1[1], Integer.parseInt(col2[1]), col3[1]);
-            return Arrays.asList(newRow).iterator();
-        }
-    };
-
-    @SuppressWarnings("serial")
-    private static final FlatMapFunction<Row, Row> mergeCols = new FlatMapFunction<Row, Row>() {
-
-        @Override
-        public Iterator<Row> call(Row row) throws Exception {
-            final Row newRow = RowFactory.create(row.mkString(":"));
             return Arrays.asList(newRow).iterator();
         }
     };
@@ -109,7 +103,7 @@ public class FileWriteExample {
         /**
          * text 파일 저장은 하나의 칼럼에 대해서만 가능 하다.
          */
-        Dataset<Row> dsTxt = ds.flatMap(mergeCols, RowEncoder.apply(SparkUtils.stringSchema("value")));
+        Dataset<Row> dsTxt = ds.flatMap(RddFunction.mergeCols, RowEncoder.apply(SparkUtils.stringSchema("value")));
         dsTxt.show();
         dsTxt.write().text(textfile);
         spark.close();

@@ -8,7 +8,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function2;
 
-import org.chiwooplatform.samples.SparkContextHolder;
+import org.chiwooplatform.samples.support.SparkContextHolder;
 import org.junit.Test;
 
 /**

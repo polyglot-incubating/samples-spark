@@ -1,4 +1,4 @@
-package org.chiwooplatform.samples;
+package org.chiwooplatform.samples.support;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;

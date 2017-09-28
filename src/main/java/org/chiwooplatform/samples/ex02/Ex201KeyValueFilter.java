@@ -12,7 +12,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
 
-import org.chiwooplatform.samples.SparkContextHolder;
+import org.chiwooplatform.samples.support.SparkContextHolder;
 import org.junit.Test;
 
 import scala.Tuple2;

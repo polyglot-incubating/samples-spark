@@ -4,8 +4,8 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 
-import org.chiwooplatform.samples.SparkContextHolder;
-import org.chiwooplatform.samples.SparkUtils;
+import org.chiwooplatform.samples.support.SparkContextHolder;
+import org.chiwooplatform.samples.support.SparkUtils;
 import org.junit.Test;
 
 public class Ex004RddUnion {

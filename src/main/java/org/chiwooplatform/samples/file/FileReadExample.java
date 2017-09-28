@@ -7,8 +7,8 @@ import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 
-import org.chiwooplatform.samples.SparkContextHolder;
-import org.chiwooplatform.samples.SparkUtils;
+import org.chiwooplatform.samples.support.SparkContextHolder;
+import org.chiwooplatform.samples.support.SparkUtils;
 import org.junit.Test;
 
 /**

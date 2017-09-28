@@ -16,8 +16,9 @@ import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 
-import org.chiwooplatform.samples.SparkContextHolder;
-import org.chiwooplatform.samples.SparkUtils;
+import org.chiwooplatform.samples.support.RddFunction;
+import org.chiwooplatform.samples.support.SparkContextHolder;
+import org.chiwooplatform.samples.support.SparkUtils;
 import org.junit.Test;
 
 /**
@@ -31,7 +32,7 @@ public class CsvExample implements Serializable {
     private static final long serialVersionUID = -5073337853202330878L;
 
     /* 구분자가 !?! 인 경우 */
-    private static final String DILIMETER = "\\!\\?\\!";
+    private static final String DELIMITER = "\\!\\?\\!";
 
     @Test
     public void ut1001_samplesCSV() throws Exception {
@@ -146,7 +147,7 @@ public class CsvExample implements Serializable {
     }
 
     private MapFunction<Row, Sellout> toSellout = row -> {
-        String[] cols = row.getString(0).split(DILIMETER);
+        String[] cols = row.getString(0).split(DELIMITER);
         Sellout so = new Sellout();
         int i = -1;
         so.setGc(cols[++i]);
@@ -174,10 +175,10 @@ public class CsvExample implements Serializable {
         spark.close();
     }
 
-    private static MapFunction<Row, Row> buildRow = row -> {
-        final Object[] cols = row.getString(0).split(DILIMETER);
-        return RowFactory.create(cols);
-    };
+    // private static MapFunction<Row, Row> buildRow = row -> {
+    // final Object[] cols = row.getString(0).split(DILIMETER);
+    // return RowFactory.create(cols);
+    // };
 
     @Test
     public void ut1005_customDilimeterWithSchema() throws Exception {
@@ -186,14 +187,14 @@ public class CsvExample implements Serializable {
                 DataTypes.StringType, DataTypes.StringType, DataTypes.StringType, DataTypes.StringType };
         final StructType schema = SparkUtils.buildSchema(tuples, types);
         final SparkSession spark = SparkContextHolder.getLocalSession("SparkCSVApp");
-        Dataset<Row> rdd = spark.read().csv("src/main/resources/samples3.csv").map(buildRow, RowEncoder.apply(schema))
-                .cache();
+        Dataset<Row> rdd = spark.read().csv("src/main/resources/samples3.csv")
+                .map(RddFunction.rowByDelimiter(DELIMITER), RowEncoder.apply(schema)).cache();
         rdd.show();
         spark.close();
     }
 
     private static org.apache.spark.api.java.function.Function<Row, Row> buildJavaRow = row -> {
-        final Object[] cols = row.getString(0).split(DILIMETER);
+        final Object[] cols = row.getString(0).split(DELIMITER);
         return RowFactory.create(cols);
     };
 
@@ -222,7 +223,7 @@ public class CsvExample implements Serializable {
                 DataTypes.StringType, DataTypes.StringType, DataTypes.StringType, DataTypes.StringType };
         final StructType schema = SparkUtils.buildSchema(tuples, types);
         final SparkSession spark = SparkContextHolder.getLocalSession("SparkCSVApp");
-        Dataset<Row> rdd = spark.read().csv("src/main/resources/samples3.csv").map(buildRow, RowEncoder.apply(schema))
+        Dataset<Row> rdd = spark.read().csv("src/main/resources/samples3.csv").map(RddFunction.rowByDelimiter(DELIMITER), RowEncoder.apply(schema))
                 // .wit
                 .cache();
         rdd.show();
