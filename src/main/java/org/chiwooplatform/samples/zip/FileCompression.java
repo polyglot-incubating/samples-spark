@@ -126,7 +126,7 @@ public class FileCompression {
 
         final String filename = "target/spark/compression.collection.gz/*.gz";
         JavaSparkContext spark = SparkContextHolder.getLocalContext("UnCompressFile");
-        final JavaRDD<Row> jrdd = spark.binaryFiles(filename).map(StreamFunction.dataStreamToString)
+        final JavaRDD<Row> jrdd = spark.binaryFiles(filename).map(StreamFunction.compressedStreamToString)
                 .flatMap(v -> Arrays.asList(v.split("\\n")).iterator())
                 .mapPartitions(RddFunction.flatMapPartitions(callback));
 

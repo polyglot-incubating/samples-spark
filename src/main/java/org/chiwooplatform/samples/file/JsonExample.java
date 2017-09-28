@@ -1,9 +1,11 @@
 package org.chiwooplatform.samples.file;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import java.io.Serializable;
 
@@ -27,6 +29,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonExample implements Serializable {
 
     private static final long serialVersionUID = -5073337853202330878L;
+
+    @Test
+    public void ut1000_loadFormedJson() throws Exception {
+        final Pattern NL = Pattern.compile("\\n");
+
+        final String json = "{\"id\":4,\"name\":\"eMMA\",\"age\":\"51\",\"gender\":\"f\"}" + "\n"
+                + "{\"id\":5,\"name\":\"tIGER\",\"age\":\"49\",\"gender\":\"m\"}" + "\n"
+                + "{\"id\":6,\"name\":\"sCOTT\",\"age\":\"53\",\"gender\":\"m\"}" + "\n";
+
+        JavaSparkContext spark = SparkContextHolder.getLocalContext("JsonExample");
+        JavaRDD<String> jrdd = spark.parallelize(Arrays.asList(NL.split(json)));
+        // System.out.println("jrdd.count() : " + jrdd.count());
+        // SparkUtils.log(jrdd.take(10));
+
+        SparkSession session = SparkContextHolder.getLocalSession("JsonExample2");
+        @SuppressWarnings("deprecation")
+        Dataset<Row> rdd = session.read().json(jrdd);
+        rdd.show();
+        session.close();
+        spark.close();
+    }
 
     @Test
     public void ut1001_wellFormedJson() throws Exception {

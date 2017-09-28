@@ -34,7 +34,7 @@ public class StreamFunction {
         return in;
     }
 
-    private static String readStream(final String path, final PortableDataStream pds)
+    private static String readCompressedStream(final String path, final PortableDataStream pds)
             throws IOException, UnsupportedEncodingException {
         InputStream in = null;
         BufferedReader br = null;
@@ -60,14 +60,14 @@ public class StreamFunction {
      * gz 파일을 한번에 압축 해제하고 그 결과를 컬렉션에 담는 처리가 좋은 구조 처럼 느껴지지 않는다. flatMap 과 같이 iterable 하게
      * 하는것이 좋겠다.
      */
-    public static Function<Tuple2<String, PortableDataStream>, String> dataStreamToString = new Function<Tuple2<String, PortableDataStream>, String>() {
+    public static Function<Tuple2<String, PortableDataStream>, String> compressedStreamToString = new Function<Tuple2<String, PortableDataStream>, String>() {
         private static final long serialVersionUID = 1L;
 
         @Override
         public String call(Tuple2<String, PortableDataStream> tuple) throws Exception {
             final String path = tuple._1();
             final PortableDataStream pds = tuple._2();
-            return StreamFunction.readStream(path, pds);
+            return StreamFunction.readCompressedStream(path, pds);
         }
     };
 
@@ -75,6 +75,7 @@ public class StreamFunction {
      * @SuppressWarnings("serial") public static final <T> PairFunction<Tuple2<String,
      * PortableDataStream>, String, T> xxx = new PairFunction<Tuple2<String,
      * PortableDataStream>, String, T>() {
+     * 
      * @Override public Tuple2<String, T> call(Tuple2<String, PortableDataStream> pds)
      * throws Exception { return (T)null; } };
      */
