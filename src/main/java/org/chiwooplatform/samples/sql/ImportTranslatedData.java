@@ -1,9 +1,17 @@
 package org.chiwooplatform.samples.sql;
 
+import java.util.Properties;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import javax.sound.midi.Soundbank;
+
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
@@ -17,12 +25,114 @@ import org.junit.Test;
 
 public class ImportTranslatedData {
 
+    private static final char NL = '\n';
+
+    private String tableDDL() {
+        StringBuilder b = new StringBuilder();
+        b.append("IF NOT EXISTS (SELECT 1 FROM sysObjects WHERE name='EX_TBL_01' AND xtype='U')").append(NL);
+        b.append("create table EX_TBL_01 (                                ").append(NL);
+        b.append("    id      varchar(36)    NOT NULL,                    ").append(NL);
+        b.append("    name    varchar(100)   COLLATE Korean_Wansung_CI_AS,").append(NL);
+        b.append("    kcol1   varchar(255)   COLLATE Korean_Wansung_CI_AS,").append(NL);
+        b.append("    kcol2   varchar(255)   COLLATE Korean_Wansung_CI_AS,").append(NL);
+        b.append("    kcol3   varchar(255)   COLLATE Korean_Wansung_CI_AS,").append(NL);
+        b.append("    kcol4   varchar(255)   COLLATE Korean_Wansung_CI_AS,").append(NL);
+        b.append("    kcol5   varchar(255)   COLLATE Korean_Wansung_CI_AS,").append(NL);
+        b.append("    acol1   varchar(255)   COLLATE Latin1_General_CI_AS,").append(NL);
+        b.append("    acol2   varchar(255)   COLLATE Latin1_General_CI_AS,").append(NL);
+        b.append("    acol3   varchar(255)   COLLATE Latin1_General_CI_AS,").append(NL);
+        b.append("    jcol1   varchar(255)   COLLATE Japanese_CI_AS,      ").append(NL);
+        b.append("    jcol2   varchar(255)   COLLATE Japanese_CI_AS,      ").append(NL);
+        b.append("    jcol3   varchar(255)   COLLATE Japanese_CI_AS,      ").append(NL);
+        b.append("    val1    INT,   ").append(NL);
+        b.append("    val2    INT,   ").append(NL);
+        b.append("    val3    INT,   ").append(NL);
+        b.append("    val4    INT,   ").append(NL);
+        b.append("    val5    INT,   ").append(NL);
+        b.append("    reg_dtm datetime        DEFAULT CURRENT_TIMESTAMP,  ").append(NL);
+        b.append("    primary key(id) ").append(NL);
+        b.append("); ").append(NL);
+        b.append("GO").append(NL);
+        return b.toString();
+    }
+
+    private Properties props() {
+        Properties prop = new Properties();
+        prop.setProperty("driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        prop.setProperty("user", "aider");
+        prop.setProperty("password", "aider1234");
+        return prop;
+    }
+
+    // val prop = new java.util.Properties
+    // prop.setProperty("driver", "com.mysql.jdbc.Driver")
+    // prop.setProperty("user", "root")
+    // prop.setProperty("password", "pw")
+
+    @Test
+    public void ut1001_createTable() throws Exception {
+
+        Connection conn = null;
+        String url = "jdbc:sqlserver://SeonBoShim\\MSSQLSERVER:1433";
+        try { 
+            conn = DriverManager.getConnection(url, props() );
+            System.out.println("conn: " + conn);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            conn.close();
+        }
+        //
+        //
+        //
+        // SparkSession spark = SparkContextHolder.getLocalSession("CreateTableSample");
+        // //
+        // jdbc:sqlserver://[serverName[\instanceName][:portNumber]][;property=value[;property=value]]
+        // Dataset<Row> jdbcDF = spark.read().format("jdbc").option("url",
+        // "jdbc:sqlserver://SeonBoShim")
+        // .option("dbtable", "dbo.SAMPLE01").option("user", "aider").option("password",
+        // "aider1234").load();
+        // // spark.read().format("jdbc").option("url", "jdbc:sqlserver://SeonBoShim")
+        // // .option("dbtable", "dbo.SAMPLE01").option("user",
+        // "aider").option("password",
+        // // "aider1234").load().write().mode(saveMode)
+    }
+
     /**
      * 
      * <pre>
      * ItemSales.zip Schema
      * gcode acode module year weekno sellcnt
      * </pre>
+     * 
+     * @param spark
+     * @param rdd
+     * @return
+     */
+    private Dataset<Row> createDataset(final SparkSession spark, final JavaRDD<Row> rdd) {
+        final String[] tuples = { "gcode", "acode", "module", "year", "weekno", "sellcnt" };
+        final DataType[] dataTypes = { DataTypes.StringType, DataTypes.StringType, DataTypes.StringType,
+                DataTypes.StringType, DataTypes.StringType, DataTypes.StringType };
+        final StructType schema = SparkUtils.buildSchema(tuples, dataTypes);
+        Dataset<Row> result = spark.createDataFrame(rdd, schema);
+        return result;
+    }
+
+    private void importData(final SparkSession spark, final Dataset<Row> rdd) {
+        Properties props = new Properties();
+        props.setProperty("driver", "");
+        props.setProperty("user", "aider");
+        props.setProperty("password", "aider1234");
+        props.setProperty("url", "aider1234");
+
+        final String url = props.getProperty("url");
+
+        rdd.write().mode(SaveMode.Overwrite).jdbc(url, "table", props);
+    }
+
+    /**
      * 
      * @throws Exception
      */
@@ -35,18 +145,13 @@ public class ImportTranslatedData {
                 .flatMap(RddFunction.toRowsByNewLine).map(RddFunction.makeRowByDelimiter(","));
         // System.out.println("jrdd.count(): " + jrdd.count());
         // SparkUtils.log(jrdd.take(10));
-        final String[] tuples = { "gcode", "acode", "module", "year", "weekno", "sellcnt" };
-        final DataType[] dataTypes = { DataTypes.StringType, DataTypes.StringType, DataTypes.StringType,
-                DataTypes.StringType, DataTypes.StringType, DataTypes.StringType };
-        final StructType schema = SparkUtils.buildSchema(tuples, dataTypes);
         SparkSession spark = SparkContextHolder.getLocalSession("ImportTranslatedData");
-        Dataset<Row> rdd = spark.createDataFrame(jrdd, schema);
-        rdd.printSchema();
+        Dataset<Row> rdd = createDataset(spark, jrdd);
+        // rdd.printSchema();
         rdd.show(20);
         ctx.close();
     }
 }
-
 
 // @formatter:off
 ///*

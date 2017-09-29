@@ -45,6 +45,15 @@ public final class SparkUtils {
         return SparkUtils.buildSchema(new String[] { columnName }, new DataType[] { DataTypes.StringType });
     }
 
+    public static StructType buildSchema(final String[] tuples) {
+        List<StructField> fields = new ArrayList<>();
+        for (String column : tuples) {
+            fields.add(structField.apply(column, DataTypes.StringType));
+        }
+        final StructType structType = DataTypes.createStructType(fields);
+        return structType;
+    }
+
     public static StructType buildSchema(final String[] tuples, final DataType[] types) {
         List<StructField> fields = new ArrayList<>();
         IntStream.range(0, tuples.length).mapToObj(i -> structField.apply(tuples[i], types[i])).forEach(f -> {

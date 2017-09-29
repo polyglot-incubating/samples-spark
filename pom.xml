@@ -35,11 +35,17 @@
             <artifactId>commons-compress</artifactId>
             <version>1.14</version>
         </dependency>
-        <!-- mariadb driver -->
+        <!-- mariadb -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>1.1.9</version>
+        </dependency>
+        <!-- mssql -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>6.2.1.jre8</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
