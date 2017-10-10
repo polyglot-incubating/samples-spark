@@ -3,6 +3,7 @@ package org.chiwooplatform.samples.support;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 
@@ -33,6 +34,10 @@ import org.apache.spark.sql.types.StructType;
 import scala.Tuple2;
 
 public final class SparkUtils {
+
+    public static String uuid() {
+        return UUID.randomUUID().toString();
+    }
 
     public static Column column(final String columnName) {
         return org.apache.spark.sql.functions.col(columnName);

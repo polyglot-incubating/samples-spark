@@ -60,7 +60,7 @@ public class StreamFunction {
      * gz 파일을 한번에 압축 해제하고 그 결과를 컬렉션에 담는 처리가 좋은 구조 처럼 느껴지지 않는다. flatMap 과 같이 iterable 하게
      * 하는것이 좋겠다.
      */
-    public static Function<Tuple2<String, PortableDataStream>, String> compressedStreamToString = new Function<Tuple2<String, PortableDataStream>, String>() {
+    public static Function<Tuple2<String, PortableDataStream>, String> unzipToString = new Function<Tuple2<String, PortableDataStream>, String>() {
         private static final long serialVersionUID = 1L;
 
         @Override

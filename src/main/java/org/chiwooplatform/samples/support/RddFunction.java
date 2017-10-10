@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
@@ -117,6 +118,24 @@ public class RddFunction {
                     }
                 }
                 return rows.iterator();
+            }
+        };
+    }
+
+    public static final <T, R> SkipRowFunction<T, R> skipFirstRow() {
+        return new SkipRowFunction<T, R>(1);
+    };
+
+    @SuppressWarnings("serial")
+    public static final <T, R> Function2<Integer, Iterator<T>, Iterator<R>> skipRow(final int rownum) {
+        return new Function2<Integer, Iterator<T>, Iterator<R>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Iterator<R> call(Integer idx, Iterator<T> val) throws Exception {
+                if (idx < rownum) {
+                    val.next();
+                }
+                return (Iterator<R>) val;
             }
         };
     }
