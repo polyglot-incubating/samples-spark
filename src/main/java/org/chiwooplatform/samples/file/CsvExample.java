@@ -2,15 +2,16 @@ package org.chiwooplatform.samples.file;
 
 import java.util.Arrays;
 
-import java.io.Serializable;
-
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.functions;
 import org.apache.spark.sql.catalyst.encoders.RowEncoder;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
@@ -27,9 +28,9 @@ import org.junit.Test;
  * 
  * val dataFrame = spark.read.parquet("example.parquet")
  */
-public class CsvExample implements Serializable {
+public class CsvExample /* implements Serializable */ {
 
-    private static final long serialVersionUID = -5073337853202330878L;
+    // private static final long serialVersionUID = -5073337853202330878L;
 
     /* 구분자가 !?! 인 경우 */
     private static final String DELIMITER = "\\!\\?\\!";
@@ -207,14 +208,24 @@ public class CsvExample implements Serializable {
         final SparkSession spark = SparkContextHolder.getLocalSession("SparkCSVApp");
         JavaRDD<Row> javaRDD = spark.read().csv("src/main/resources/samples3.csv").toJavaRDD().map(buildJavaRow);
         System.out.println("CHECK JavaRDD DATA");
-        javaRDD.take(10).forEach(System.out::println);
-        // javaRDD.zipWithIndex()
+        javaRDD.take(10).forEach(System.out::println); 
+        JavaPairRDD<Row, Long> jprdd = javaRDD.zipWithIndex();
+        jprdd.take(10).forEach(System.out::println);
         Dataset<Row> rdd = spark.createDataFrame(javaRDD, schema);
         // drop rows for Scala
         // rdd.mapPartitions(iter -> iter.drop(1));
         rdd.show();
         spark.close();
     }
+
+    @SuppressWarnings("serial")
+    static FilterFunction<Row> rowFilter = new FilterFunction<Row>() {
+        @Override
+        public boolean call(Row row) throws Exception {
+            final long rownum = row.getLong(1);
+            return (rownum > 0);
+        }
+    };
 
     @Test
     public void ut1007_skipRowsInDataFrame() throws Exception {
@@ -223,11 +234,15 @@ public class CsvExample implements Serializable {
                 DataTypes.StringType, DataTypes.StringType, DataTypes.StringType, DataTypes.StringType };
         final StructType schema = SparkUtils.buildSchema(tuples, types);
         final SparkSession spark = SparkContextHolder.getLocalSession("SparkCSVApp");
-        Dataset<Row> rdd = spark.read().csv("src/main/resources/samples3.csv").map(RddFunction.rowByDelimiter(DELIMITER), RowEncoder.apply(schema))
-                // .wit
-                .cache();
+// @formatter:off
+        Dataset<Row> rdd = spark.read().csv("src/main/resources/samples3.csv")
+                .withColumn("rownum", functions.monotonically_increasing_id())
+                .filter(rowFilter)
+                .limit(200)
+                .map(RddFunction.rowByDelimiter(DELIMITER), RowEncoder.apply(schema)).cache();
         rdd.show();
         spark.close();
+     // @formatter:on
     }
 
 }

@@ -26,12 +26,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * val dframe = spark.jsonFile("hdfs:///data/spark/device.json")
  */
-public class JsonExample implements Serializable {
-
-    private static final long serialVersionUID = -5073337853202330878L;
+public class JsonExample {
 
     @Test
-    public void ut1000_loadFormedJson() throws Exception {
+    public void ut1001_loadFormedJson() throws Exception {
         final Pattern NL = Pattern.compile("\\n");
 
         final String json = "{\"id\":4,\"name\":\"eMMA\",\"age\":\"51\",\"gender\":\"f\"}" + "\n"
@@ -52,7 +50,7 @@ public class JsonExample implements Serializable {
     }
 
     @Test
-    public void ut1001_wellFormedJson() throws Exception {
+    public void ut1002_wellFormedJson() throws Exception {
         SparkSession spark = SparkContextHolder.getLocalSession("JsonExample");
         Dataset<Row> rdd = spark.read().json("src/main/resources/json-well-formed.json");
         rdd.show();
@@ -66,7 +64,7 @@ public class JsonExample implements Serializable {
      * @throws Exception
      */
     @Test
-    public void ut1002_malFormedJson() throws Exception {
+    public void ut1003_malFormedJson() throws Exception {
         SparkSession spark = SparkContextHolder.getLocalSession("JsonExample");
 
         Column name = SparkUtils.column("name");
@@ -134,7 +132,7 @@ public class JsonExample implements Serializable {
      * line 단위의 Custom Json Parser 를 구현 하는 단순한 예제
      */
     @SuppressWarnings("serial")
-    class ParseJson implements FlatMapFunction<Iterator<String>, Person> {
+    static class ParseJson implements FlatMapFunction<Iterator<String>, Person> {
         final ObjectMapper mapper = new ObjectMapper();
 
         public Iterator<Person> call(Iterator<String> lines) throws Exception {
@@ -163,7 +161,7 @@ public class JsonExample implements Serializable {
      * @throws Exception
      */
     @Test
-    public void ut1003_malFormedJsonCustomParser() throws Exception {
+    public void ut1004_malFormedJsonCustomParser() throws Exception {
         JavaSparkContext spark = SparkContextHolder.getLocalContext("malFormedJsonCustomParser");
         JavaRDD<Person> rdd = spark.textFile("src/main/resources/json-mal-formed.json").mapPartitions(new ParseJson());
         System.out.println("rdd.count(): " + rdd.count());
@@ -172,7 +170,7 @@ public class JsonExample implements Serializable {
     }
 
     @SuppressWarnings("serial")
-    class ParseJsonRow implements FlatMapFunction<Iterator<Row>, Person> {
+    static class ParseJsonRow implements FlatMapFunction<Iterator<Row>, Person> {
         final ObjectMapper mapper = new ObjectMapper();
 
         @Override
@@ -200,19 +198,19 @@ public class JsonExample implements Serializable {
      * SparkSession 을 직접적으로 다루는 방식 (JavaSparkContext를 거치지 않음)
      */
     @Test
-    public void ut1004_malFormedJsonCustomDatasetParser() throws Exception {
+    public void ut1005_malFormedJsonCustomDatasetParser() throws Exception {
         final SparkSession spark = SparkContextHolder.getLocalSession("malFormedJsonCustomDatasetParser");
         JavaRDD<Person> rdd = spark.read().text("src/main/resources/json-mal-formed.json").javaRDD()
                 .mapPartitions(new ParseJsonRow());
         // System.out.println("rdd.count(): " + rdd.count());
         // SparkUtils.olog(rdd.take(10));
         Dataset<Row> ds = spark.createDataFrame(rdd, Person.class);
+        ds.show();
 
         spark.read().text("src/main/resources/json-mal-formed.json").javaRDD().mapPartitions(new ParseJsonRow())
         // .flatMap(s -> spark.createDataFrame(s, Person.class) )
         ;
 
-        ds.show();
         // ds.write().parquet("target/spark/Person.Dataframe.parquet");
         /**
          * text 파일은 single 칼럼만 가능
@@ -224,7 +222,5 @@ public class JsonExample implements Serializable {
         // ds.javaRDD().saveAsObjectFile("target/spark/Person.Dataframe.obj");
         spark.close();
     }
-
-    // FlatMapFunction<Person, Dataset<>>
 
 }

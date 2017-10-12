@@ -54,6 +54,7 @@ public class FileCompression {
         Dataset<Row> ds = spark.createDataFrame(rowData(), schema);
         ds.show();
         // FileUtils.deleteQuietly(new File(gzfile));
+        // ds = ds.repartition(2);
         ds.write().mode(SaveMode.Overwrite).format("json").option("compression", "gzip").mode(SaveMode.Overwrite)
                 .save(gzfile);
         spark.close();

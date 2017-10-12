@@ -1,4 +1,4 @@
-package org.chiwooplatform.samples;
+package org.chiwooplatform.samples.support;
 
 public enum CompressionType {
 // @formatter:off
