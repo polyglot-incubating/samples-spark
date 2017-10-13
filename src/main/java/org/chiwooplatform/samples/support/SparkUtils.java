@@ -39,6 +39,20 @@ public final class SparkUtils {
         return UUID.randomUUID().toString();
     }
 
+    public static String getPath(String path) throws IOException {
+        File f = new File(new File(".").getCanonicalPath() + "/");
+        final String filepath = f.getCanonicalPath();
+        assert f.exists() : "File not found! '" + filepath + "'.";
+        return filepath;
+    }
+
+    public static String resourcePath(String path) throws IOException {
+        File f = new File(new File(".").getCanonicalPath() + "/src/main/resources/" + path);
+        final String filepath = f.getCanonicalPath();
+        assert f.exists() : "File not found! '" + filepath + "'.";
+        return filepath;
+    }
+
     public static Column column(final String columnName) {
         return org.apache.spark.sql.functions.col(columnName);
     }

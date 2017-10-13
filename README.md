@@ -26,13 +26,18 @@ count, reduce, collect, lookup, save, ... 등이 있다.
 
 **Hadoop** HadoopMR 이 힘든 이유는 HDFS 상의 여러 파일을 다루면서 처리 한다.
 ~~~
-  1. Read File -> 2. Handle Data (Step1) -> 3. Write File 
-    -> 4. Read File -> 5. Handle Data (Step2) ...
+  1. Read File 
+    -> 2. Handle Data (Step 1) 
+      -> 3. Write File 
+        -> 4. Read File 
+          -> 5(n). Handle Data (Step n) ...
 ~~~
 
 **Spark** Spark는 여러 파일을 넘처나는 RAM 으로 처리 한다.
 ~~~
-  1. Read File -> 2. Handle Data (Step1) -> 4. Handle Data (Step2) ...
+  1. Read File 
+    -> 2. Handle Data (Step 1) 
+      -> 3. Handle Data (Step 2) ...
 ~~~
 
 - Why RAM? 
@@ -116,6 +121,8 @@ Spark 프로그래밍은 컨텍스트를 열고 닫는 것부터가 시작이다
 ~~~
 
 
+#### Spark 기본 
+
 | **Example**        | **Description**           | 
 | ------------- |:-------------| 
 | ex01   | Spark 에 대한 아주 기초 적인 예제를 통해 기본 개념을 익힌다. | 
@@ -132,7 +139,11 @@ Spark 프로그래밍은 컨텍스트를 열고 닫는 것부터가 시작이다
 | ex02.Ex202WordCountMapReduce    | KeyValue 와 MapReduce 를 참고할 만한 응용 기법 |
 | ex02.Ex203WordCountOptimized    | Pure 함수를 통한 Ex202WordCountMapReduce 프로그램의 최적화 |
 | ex02.Ex204AvgCount    | 전체 합산 및 평균을 구하는 aggregate 샘플  |
-| file                  | Spark 는 파일과 스트림 데이터 처리에 대한 강점이 있다.  |
+  
+#### Spark 파일 처리 
+Spark 는 파일과 스트림 데이터 처리에 대한 강점이 있다. 특히 large 파일에 대한 처리가 많으므로 파일에 대한 전송 지연과 디스크 가용량 최적화가 필요 하기에 압축 파일을 잘 다루어야 한다.
+| **Example**        | **Description**           | 
+| ------------- |:-------------| 
 | file.FileWriteExample  | text, json, csv, parquet 파일 쓰기 샘플  |
 | file.FileReadExample  | text, json, csv, parquet 파일 읽기 샘플  |
 | file.JsonExample    | ut1001_loadFormedJson(): Spark 에서 다루는 WellFormed 스키마 데이터에 대한 데이터프레임으로 변환 처리  |
@@ -147,11 +158,14 @@ Spark 프로그래밍은 컨텍스트를 열고 닫는 것부터가 시작이다
 |   | ut1005_customDilimeterWithSchema(): 데이터 프레임의 스키마를 동적 스키마로 변환  |
 |   | ut1006_customDilimeterWithSchemaJavaRDD(): 커스텀 구분자를 통한 RDD 데이터를 동적 구조의 데이터 프레임으로 변환  |
 |   | ut1007_skipRowsInDataFrame()(): 데이터프레임에 인덱스 칼럼을 추가 하고 특정 row 를 필터링 하는 샘플  |
-| zip                  | Spark 는 large 파일에 대한 처리가 많으므로, 파일에 대한 전송 지연과 디스크 가용량 최적화가 필요 하기에 압축 파일을 잘 다루어야 한다.  |
-| file.FileCompression  | Spark 에서 파일을 다루는 샘플  |
+| zip.FileCompression  | Spark 에서 파일을 다루는 샘플  |
 |   | test_writeJsonCompressFile(): 데이터프레임을 GZIP 파일로 저장 하는 샘플 |
 |   | test_readFromUnCompressFile(): GZIP 파일을 읽어 데이터프레임으로 변환 하는 샘플 |
-| sql                  | Spark 의 데이터프레임을 RDBMS 와 연동 하여 처리 하는 샘플  |
+  
+#### Spark JDBC 처리 
+Spark 에서 NativeSQL 을 다루거나, 데이터프레임 과 RDBMS 간의 데이터 처리에 대한 예제   
+| **Example**        | **Description**           | 
+| ------------- |:-------------| 
 | sql.ImportTranslatedData  | Spark 환경에서 Native SQL 을 처리 하거나, 데이터프렘임을 다루는 샘플  |
 |   | ut1001_createTable(): Spark 환경에서 Native SQL 을 통한 테이블 생성 |
 |   | ut1002_checkDataFrame(): JDBC 로 데이터를임포트 하기전 데이터 프레임확인 |
@@ -159,13 +173,14 @@ Spark 프로그래밍은 컨텍스트를 열고 닫는 것부터가 시작이다
 |   | ut1004_importUserTable(): Spark 의 데이터프레임을 RDBMS 사용자 정의 테이블로 임포트 |
 |   | ut1005_loadFromUserTable(): RDBMS 의 테이블 데이터를 Spark 의 데이터프레임으로 변환 |
 
+#### Spark ML(Machine Learning)
+Spark MLlib 를 통해 다양한 머신 러닝 알고리즘을 응용 할 수 있다.
+- ml.binary.BinarizerExample  
+특정 조건(TCA)에 따른 true / false 를 판단 하여 target 을 계산 한다.
 
+- ml.binary.BinaryClassificationMetricsExample
+LogisticRegression 중 L-BFGS 알고리즘을 사용 하여 학습하는 샘플
 
-
-
-
-
- 
 
 
 
@@ -183,5 +198,3 @@ http://emptypipes.org/2015/01/17/python-vs-scala-vs-spark/
 
 
 
-
-83 page 까진 봤다.
